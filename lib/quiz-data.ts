@@ -6,8 +6,13 @@ export const quizSteps = [
     elements: {
       progressColor: "red",
       progressValue: 10,
+      showGenderImages: true, // Flag para mostrar imagens de gênero
     },
-    image: "URL_IMAGEN_ETAPA_1",
+    images: {
+      woman: "https://nutricaoalimentos.shop/wp-content/uploads/2025/09/bf6cc9f0-6335-43a3-bde9-7a24b3ec594b.webp",
+      man: "https://nutricaoalimentos.shop/wp-content/uploads/2025/09/dbd76c4d-839f-4315-a6ea-05177c0c1f68.webp"
+    },
+    image: "", // Sem imagem única para esta etapa
   },
   {
     id: 2,
