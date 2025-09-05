@@ -22,7 +22,7 @@ export const quizSteps = [
       progressColor: "red",
       progressValue: 15,
     },
-    image: "URL_IMAGEN_ETAPA_2",
+    image: "https://nutricaoalimentos.shop/wp-content/uploads/2025/09/lg-du7fi-jonathan-borba-ac5-efhq7fs-unsplash-1-13-352958-167353954298643-1.jpg",
   },
   {
     id: 3,
@@ -32,7 +32,7 @@ export const quizSteps = [
       progressColor: "red",
       progressValue: 25,
     },
-    image: "URL_IMAGEN_ETAPA_3",
+    image: "https://nutricaoalimentos.shop/wp-content/uploads/2025/09/lg-onjmi-terapia-de-casal-pode-ajudarjpg-1.webp",
   },
   {
     id: 4,
@@ -42,7 +42,7 @@ export const quizSteps = [
       progressColor: "red",
       progressValue: 35,
     },
-    image: "URL_IMAGEN_ETAPA_4",
+    image: "https://nutricaoalimentos.shop/wp-content/uploads/2025/09/lg-atmid-whatsapp.jpg",
   },
   {
     id: 5,
@@ -52,7 +52,7 @@ export const quizSteps = [
       progressColor: "red",
       progressValue: 45,
     },
-    image: "URL_IMAGEN_ETAPA_5",
+    image: "https://nutricaoalimentos.shop/wp-content/uploads/2025/09/lg-n2zi4-istockphoto-1124728680-612x612-1.jpg",
   },
   {
     id: 6,
@@ -62,7 +62,7 @@ export const quizSteps = [
       progressColor: "red",
       progressValue: 55,
     },
-    image: "URL_IMAGEN_ETAPA_6",
+    image: "https://nutricaoalimentos.shop/wp-content/uploads/2025/09/lg-9xvta-canva-couple-in-love-mafv-z4mya0.jpg",
   },
   {
     id: 7,
@@ -72,7 +72,7 @@ export const quizSteps = [
       progressColor: "red",
       progressValue: 65,
     },
-    image: "URL_IMAGEN_ETAPA_7",
+    image: "https://nutricaoalimentos.shop/wp-content/uploads/2025/09/lg-kelqn-et2-9197-13-259945-169169691236293.jpg",
   },
   {
     id: 8,
@@ -82,7 +82,7 @@ export const quizSteps = [
       progressColor: "red",
       progressValue: 70,
     },
-    image: "URL_IMAGEN_ETAPA_8",
+    image: "https://nutricaoalimentos.shop/wp-content/uploads/2025/09/lg-nm0oe-images-4.jpg",
   },
   {
     id: 9,
@@ -92,7 +92,7 @@ export const quizSteps = [
       progressColor: "red",
       progressValue: 75,
     },
-    image: "URL_IMAGEN_ETAPA_9",
+    image: "https://nutricaoalimentos.shop/wp-content/uploads/2025/09/lg-xmteo-image.webp",
   },
   {
     id: 10,
@@ -102,7 +102,7 @@ export const quizSteps = [
       progressColor: "red",
       progressValue: 80,
     },
-    image: "URL_IMAGEN_ETAPA_10",
+    image: "https://nutricaoalimentos.shop/wp-content/uploads/2025/09/lg-qkpzx-10-sinais-de-que-alguem-pode-estar-sob-trabalho-espiritual-800x533-1.webp",
   },
   {
     id: 11,
@@ -122,7 +122,7 @@ export const quizSteps = [
       progressColor: "red",
       progressValue: 88,
     },
-    image: "URL_IMAGEN_ETAPA_12",
+    image: "https://nutricaoalimentos.shop/wp-content/uploads/2025/09/lg-laghi-mmju9ze.png",
   },
   {
     id: 13,
@@ -132,7 +132,7 @@ export const quizSteps = [
       progressColor: "red",
       progressValue: 91,
     },
-    image: "URL_IMAGEN_ETAPA_13",
+    image: "https://nutricaoalimentos.shop/wp-content/uploads/2025/09/lg-6ub1y-formacao-o-que-e-a-fe.jpg",
   },
   {
     id: 14,
@@ -142,7 +142,7 @@ export const quizSteps = [
       progressColor: "red",
       progressValue: 94,
     },
-    image: "URL_IMAGEN_ETAPA_14",
+    image: "https://nutricaoalimentos.shop/wp-content/uploads/2025/09/lg-4hfrk-744316952-meditacao-1024x683-1.webp",
   },
   {
     id: 15,
@@ -152,7 +152,7 @@ export const quizSteps = [
       progressColor: "red",
       progressValue: 97,
     },
-    image: "URL_IMAGEN_ETAPA_15",
+    image: "https://nutricaoalimentos.shop/wp-content/uploads/2025/09/lg-8xjoi-img-45-630450-original-5d82513550918.jpg",
   },
   {
     id: 16,
@@ -162,7 +162,7 @@ export const quizSteps = [
       progressColor: "red",
       progressValue: 100,
     },
-    image: "URL_IMAGEN_ETAPA_16",
+    image: "https://nutricaoalimentos.shop/wp-content/uploads/2025/09/lg-ix019-depositphotos-225179316-stock-photo-spiritual-meditation-connected-energy-universe.webp",
   },
   {
     id: 17,
