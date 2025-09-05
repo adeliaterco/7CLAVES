@@ -226,7 +226,6 @@ export default function HomePage() {
           <div className="container-preto">
             {/* BARRA DE PROGRESSO NO TOPO */}
             <div className="progress-container">
-              <div className="progress-text">Paso 1 de 4</div>
               <div className="progress-bar-container">
                 <div className="progress-bar-fill"></div>
               </div>
@@ -296,13 +295,13 @@ export default function HomePage() {
             {/* TEXTO DE GARANTIA */}
             <div className="texto-garantia">
               <Shield size={16} />
-              <span>Confidencial y personalizado. En solo 2 minutos tendrás tu plan de acción.</span>
+              <span>Confidencial y personalizado.</span>
             </div>
           </div>
         </div>
 
         {/* Copyright */}
-        <div className="copyright">Plan A™ Todos los Derechos Reservados.</div>
+        <div className="copyright"></div>
 
         <style jsx>{`
           @keyframes spin {
