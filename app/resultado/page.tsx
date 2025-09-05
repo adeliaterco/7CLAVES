@@ -122,7 +122,7 @@ export default function ResultPageOptimized() {
           loadVturbScript()
         }, 3000)
       })
-    }, 500) // ✅ Aumentei de 300ms para 500ms
+    }, 500)
 
     // Registra visualização da página
     try {
@@ -136,7 +136,7 @@ export default function ResultPageOptimized() {
     return () => {
       clearTimeout(initTimer)
     }
-  }, []) // ✅ Dependency array vazia para executar apenas uma vez
+  }, [])
 
   // ✅ EFFECT PARA MONITORAR CARREGAMENTO
   useEffect(() => {
@@ -153,8 +153,104 @@ export default function ResultPageOptimized() {
     return () => clearInterval(checkPlayer)
   }, [videoLoaded])
 
+  // ✅ ADICIONAR ESTILOS VIA useEffect (MÉTODO SEGURO)
+  useEffect(() => {
+    // Adiciona estilos globais de forma segura
+    const style = document.createElement('style')
+    style.textContent = `
+      /* Reset para evitar scroll horizontal */
+      html, body {
+        overflow-x: hidden !important;
+        max-width: 100vw !important;
+      }
+
+      /* Container principal sem overflow */
+      .result-page-container {
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+      }
+
+      /* Estilos para o player VTURB */
+      vturb-smartplayer {
+        border-radius: 12px !important;
+        overflow: hidden !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        display: block !important;
+      }
+
+      /* Otimizações específicas para mobile */
+      @media (max-width: 768px) {
+        .result-page-container * {
+          max-width: 100vw !important;
+          box-sizing: border-box !important;
+        }
+
+        .result-page-container .container, 
+        .result-page-container .max-w-4xl, 
+        .result-page-container .max-w-3xl, 
+        .result-page-container .max-w-2xl {
+          max-width: 100% !important;
+          margin-left: auto !important;
+          margin-right: auto !important;
+        }
+
+        .result-page-container .text-3xl {
+          font-size: 1.5rem !important;
+          line-height: 2rem !important;
+        }
+
+        .result-page-container .text-4xl {
+          font-size: 1.875rem !important;
+          line-height: 2.25rem !important;
+        }
+
+        .result-page-container .text-5xl {
+          font-size: 2.25rem !important;
+          line-height: 2.5rem !important;
+        }
+
+        .result-page-container p, 
+        .result-page-container span, 
+        .result-page-container div, 
+        .result-page-container h1 {
+          line-height: 1.6 !important;
+          word-wrap: break-word !important;
+          overflow-wrap: break-word !important;
+        }
+      }
+
+      /* Melhorias de performance */
+      .result-page-container .bg-gradient-to-r, 
+      .result-page-container .bg-gradient-to-br {
+        will-change: transform;
+        backface-visibility: hidden;
+      }
+
+      /* Scroll suave */
+      html {
+        scroll-behavior: smooth;
+      }
+
+      /* Garantir que o vídeo não quebre o layout */
+      vturb-smartplayer {
+        max-width: 100% !important;
+        height: auto !important;
+      }
+    `
+    
+    document.head.appendChild(style)
+    
+    // Cleanup: remove o style quando o componente for desmontado
+    return () => {
+      if (style.parentNode) {
+        style.parentNode.removeChild(style)
+      }
+    }
+  }, [])
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black overflow-x-hidden">
+    <div className="result-page-container min-h-screen bg-gradient-to-br from-black via-gray-900 to-black overflow-x-hidden">
       {/* HERO SECTION - HEADLINE + VÍDEO */}
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-orange-600/20 to-red-600/20 animate-pulse"></div>
@@ -189,111 +285,12 @@ export default function ResultPageOptimized() {
           {isLoaded && !videoLoaded && (
             <div className="text-center mb-4">
               <p className="text-orange-400 text-sm">
-                🔄 Inicializando reproductor de video...
+                �� Inicializando reproductor de video...
               </p>
             </div>
           )}
         </div>
       </div>
-
-      {/* ✅ ESTILOS OTIMIZADOS - MANTIDOS IGUAIS */}
-      <style jsx global>{`
-        html, body {
-          overflow-x: hidden;
-          max-width: 100vw;
-        }
-
-        .min-h-screen {
-          max-width: 100vw;
-          overflow-x: hidden;
-        }
-
-        vturb-smartplayer {
-          border-radius: 12px !important;
-          overflow: hidden;
-          width: 100% !important;
-          max-width: 100% !important;
-          display: block !important;
-        }
-
-        @media (max-width: 768px) {
-          * {
-            max-width: 100vw;
-            box-sizing: border-box;
-          }
-
-          .container, .max-w-4xl, .max-w-3xl, .max-w-2xl {
-            max-width: 100% !important;
-            margin-left: auto !important;
-            margin-right: auto !important;
-          }
-
-          .text-3xl {
-            font-size: 1.5rem !important;
-            line-height: 2rem !important;
-          }
-
-          .text-4xl {
-            font-size: 1.875rem !important;
-            line-height: 2.25rem !important;
-          }
-
-          .text-5xl {
-            font-size: 2.25rem !important;
-            line-height: 2.5rem !important;
-          }
-
-          p, span, div, h1 {
-            line-height: 1.6 !important;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-          }
-
-          .px-4 {
-            padding-left: 1rem !important;
-            padding-right: 1rem !important;
-          }
-
-          .py-8 {
-            padding-top: 2rem !important;
-            padding-bottom: 2rem !important;
-          }
-
-          .justify-center {
-            justify-content: center !important;
-          }
-
-          .items-center {
-            align-items: center !important;
-          }
-
-          .text-center {
-            text-align: center !important;
-          }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          * {
-            animation-duration: 0.01ms !important;
-            animation-iteration-count: 1 !important;
-            transition-duration: 0.01ms !important;
-          }
-        }
-
-        .bg-gradient-to-r, .bg-gradient-to-br {
-          will-change: transform;
-          backface-visibility: hidden;
-        }
-
-        html {
-          scroll-behavior: smooth;
-        }
-
-        vturb-smartplayer {
-          max-width: 100% !important;
-          height: auto !important;
-        }
-      `}</style>
     </div>
   )
 }
