@@ -17,7 +17,7 @@ export default function ResultPageOptimized() {
 
     // Cria novo script
     const script = document.createElement("script")
-    script.src = "https://scripts.converteai.net/498be6ac-2d19-4386-aba2-c11c84449107/players/68ba7f242b000d381bc12c3b/v4/player.js"
+    script.src = "https://scripts.converteai.net/498be6ac-2d19-4386-aba2-c11c84449107/players/68ba87ec575dfb94b010bc9f/v4/player.js"
     script.async = true
     
     script.onload = () => {
@@ -68,7 +68,7 @@ export default function ResultPageOptimized() {
                 <div className="relative z-10">
                   {/* VTURB PLAYER */}
                   <vturb-smartplayer 
-                    id="vid-68ba7f242b000d381bc12c3b" 
+                    id="vid-68ba87ec575dfb94b010bc9f" 
                     style={{display: 'block', margin: '0 auto', width: '100%'}}
                   ></vturb-smartplayer>
                   
