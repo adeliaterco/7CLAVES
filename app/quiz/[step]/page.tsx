@@ -33,6 +33,7 @@ export default function QuizStep() {
   const [quizData, setQuizData] = useState<any>({})
   const [isLoaded, setIsLoaded] = useState(false)
   const [userGender, setUserGender] = useState<string>("")
+  const [isAdvancing, setIsAdvancing] = useState(false)
 
   const currentStep = quizSteps[step - 1]
   // ✅ ATUALIZADO: Agora são 17 etapas no total
@@ -68,7 +69,10 @@ export default function QuizStep() {
   }, [step])
 
   const handleAnswerSelect = (answer: string) => {
+    if (isAdvancing) return; // Prevenir múltiples cliques
+    
     setSelectedAnswer(answer)
+    setIsAdvancing(true)
 
     // Registra evento de respuesta seleccionada
     enviarEvento('selecionou_resposta', {
@@ -83,15 +87,24 @@ export default function QuizStep() {
       localStorage.setItem("userGender", answer)
     }
 
+    // Guardar respuesta
+    const newQuizData = { ...quizData, [step]: answer }
+    setQuizData(newQuizData)
+    localStorage.setItem("quizData", JSON.stringify(newQuizData))
+
     // Retroalimentación visual inmediata
     const button = document.querySelector(`button[data-option="${answer}"]`)
     if (button) {
       button.classList.add("scale-105")
-      setTimeout(() => button.classList.remove("scale-105"), 200)
     }
+
+    // ✅ AVANCE AUTOMÁTICO após 1.5 segundos
+    setTimeout(() => {
+      proceedToNextStep()
+    }, 1500)
   }
 
-  const handleNext = () => {
+  const proceedToNextStep = () => {
     // Registra evento de avance a la siguiente etapa
     enviarEvento('avancou_etapa', {
       numero_etapa: step,
@@ -99,15 +112,6 @@ export default function QuizStep() {
       resposta_selecionada: selectedAnswer
     });
 
-    // Guardar respuesta
-    const newQuizData = { ...quizData, [step]: selectedAnswer }
-    setQuizData(newQuizData)
-    localStorage.setItem("quizData", JSON.stringify(newQuizData))
-
-    proceedToNextStep()
-  }
-
-  const proceedToNextStep = () => {
     // Capturar UTMs da URL atual
     const currentUrl = new URL(window.location.href);
     let utmString = '';
@@ -187,7 +191,7 @@ export default function QuizStep() {
               variant="ghost"
               onClick={handleBack}
               className="text-white hover:bg-white/20 border border-white/20"
-              disabled={currentStep?.autoAdvance}
+              disabled={currentStep?.autoAdvance || isAdvancing}
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Volver
@@ -299,7 +303,7 @@ export default function QuizStep() {
                     <p className="text-gray-300 text-center mb-8">{currentStep.description}</p>
                   )}
 
-                  {/* ✅ RENDERIZAÇÃO DAS OPÇÕES */}
+                  {/* ✅ RENDERIZAÇÃO DAS OPÇÕES COM AVANCE AUTOMÁTICO */}
                   {currentStep.options && currentStep.options.length > 0 && (
                     <div className="space-y-4">
                       {currentStep.options.map((option, index) => (
@@ -313,10 +317,13 @@ export default function QuizStep() {
                           <button
                             onClick={() => handleAnswerSelect(option)}
                             data-option={option}
+                            disabled={isAdvancing}
                             className={`w-full p-6 text-left justify-start text-wrap h-auto rounded-lg border-2 transition-all duration-300 transform hover:scale-102 ${
                               selectedAnswer === option
                                 ? "bg-gradient-to-r from-red-500 to-red-600 text-white border-red-500 shadow-lg scale-105"
-                                : "bg-gray-800 text-white border-gray-600 hover:bg-gray-700 hover:border-gray-500 shadow-sm"
+                                : isAdvancing 
+                                ? "bg-gray-800 text-gray-400 border-gray-600 cursor-not-allowed"
+                                : "bg-gray-800 text-white border-gray-600 hover:bg-gray-700 hover:border-gray-500 shadow-sm cursor-pointer"
                             }`}
                           >
                             <div className="flex items-center w-full">
@@ -336,7 +343,7 @@ export default function QuizStep() {
                           </button>
 
                           {/* Efecto de pulso para botones */}
-                          {!selectedAnswer && (
+                          {!selectedAnswer && !isAdvancing && (
                             <motion.div
                               className="absolute inset-0 rounded-lg border-2 border-red-400/50 pointer-events-none"
                               animate={{
@@ -355,6 +362,24 @@ export default function QuizStep() {
                     </div>
                   )}
 
+                  {/* ✅ INDICADOR DE AVANCE AUTOMÁTICO */}
+                  {selectedAnswer && isAdvancing && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="mt-8 text-center"
+                    >
+                      <div className="flex items-center justify-center gap-2 text-red-400">
+                        <motion.div
+                          className="w-4 h-4 border-2 border-red-400 border-t-transparent rounded-full"
+                          animate={{ rotate: 360 }}
+                          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                        />
+                        <span className="text-sm font-medium">Avanzando a la siguiente pregunta...</span>
+                      </div>
+                    </motion.div>
+                  )}
+
                   {currentStep.warning && (
                     <motion.div
                       initial={{ opacity: 0 }}
@@ -366,24 +391,6 @@ export default function QuizStep() {
                       <p className="font-medium">{currentStep.warning}</p>
                     </motion.div>
                   )}
-
-                  {selectedAnswer && currentStep.options && currentStep.options.length > 0 && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="mt-8 text-center"
-                    >
-                      {/* ✅ ATUALIZADO: Botão agora usa 17 como referência para resultado */}
-                      <Button
-                        onClick={handleNext}
-                        size="lg"
-                        className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-bold py-4 px-6 rounded-full shadow-lg max-w-full"
-                      >
-                        {step === 16 ? "Liberar Acceso" : "Siguiente Pregunta"}
-                        <ArrowRight className="w-5 h-5 ml-2" />
-                      </Button>
-                    </motion.div>
-                  )}
                 </>
               )}
             </CardContent>
@@ -391,7 +398,7 @@ export default function QuizStep() {
         </motion.div>
 
         {/* Prueba Social Simplificada */}
-        {step > 2 && !currentStep?.autoAdvance && (
+        {step > 2 && !currentStep?.autoAdvance && !isAdvancing && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
