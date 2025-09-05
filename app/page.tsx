@@ -35,8 +35,8 @@ export default function HomePage() {
 
   // URLs das imagens - FÁCIL DE EDITAR
   const imageUrls = {
-    woman: "https://comprarplanseguro.shop/wp-content/uploads/2025/08/mujer-sonriendo.webp", // Substitua pela URL da imagem da mulher
-    man: "https://comprarplanseguro.shop/wp-content/uploads/2025/08/hombre-sonriendo.webp"   // Substitua pela URL da imagem do homem
+    woman: "https://nutricaoalimentos.shop/wp-content/uploads/2025/09/bf6cc9f0-6335-43a3-bde9-7a24b3ec594b.webp", // Substitua pela URL da imagem da mulher
+    man: "https://nutricaoalimentos.shop/wp-content/uploads/2025/09/dbd76c4d-839f-4315-a6ea-05177c0c1f68.webp"   // Substitua pela URL da imagem do homem
   }
 
   // Detecção de conexão minimalista
