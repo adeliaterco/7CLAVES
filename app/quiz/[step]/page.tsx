@@ -221,8 +221,8 @@ export default function QuizStep() {
           </div>
         </div>
 
-        {/* ✅ IMAGEM DA ETAPA */}
-        {currentStep.image && (
+        {/* ✅ IMAGEM DA ETAPA (apenas para etapas que não são a primeira) */}
+        {currentStep.image && step !== 1 && (
           <motion.div 
             initial={{ opacity: 0, y: 20 }} 
             animate={{ opacity: 1, y: 0 }} 
@@ -303,63 +303,134 @@ export default function QuizStep() {
                     <p className="text-gray-300 text-center mb-8">{currentStep.description}</p>
                   )}
 
-                  {/* ✅ RENDERIZAÇÃO DAS OPÇÕES COM AVANCE AUTOMÁTICO */}
-                  {currentStep.options && currentStep.options.length > 0 && (
-                    <div className="space-y-4">
-                      {currentStep.options.map((option, index) => (
-                        <motion.div
-                          key={index}
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: index * 0.1, duration: 0.4 }}
-                          className="relative"
-                        >
-                          <button
-                            onClick={() => handleAnswerSelect(option)}
-                            data-option={option}
-                            disabled={isAdvancing}
-                            className={`w-full p-6 text-left justify-start text-wrap h-auto rounded-lg border-2 transition-all duration-300 transform hover:scale-102 ${
-                              selectedAnswer === option
-                                ? "bg-gradient-to-r from-red-500 to-red-600 text-white border-red-500 shadow-lg scale-105"
-                                : isAdvancing 
-                                ? "bg-gray-800 text-gray-400 border-gray-600 cursor-not-allowed"
-                                : "bg-gray-800 text-white border-gray-600 hover:bg-gray-700 hover:border-gray-500 shadow-sm cursor-pointer"
-                            }`}
+                  {/* ✅ ETAPA 1 - SELEÇÃO DE GÊNERO COM IMAGENS */}
+                  {step === 1 && currentStep?.elements?.showGenderImages && currentStep.images ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+                      {currentStep.options.map((option, index) => {
+                        const imageKey = option === "MUJER" ? "woman" : "man";
+                        const imageUrl = currentStep.images[imageKey];
+                        
+                        return (
+                          <motion.div
+                            key={index}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: index * 0.2, duration: 0.5 }}
+                            className="relative"
                           >
-                            <div className="flex items-center w-full">
-                              <div className={`mr-4 ${selectedAnswer === option ? "text-white" : "text-red-400"}`}>
-                                <Heart className="w-6 h-6" />
+                            <button
+                              onClick={() => handleAnswerSelect(option)}
+                              disabled={isAdvancing}
+                              className={`w-full p-4 rounded-2xl border-3 transition-all duration-300 transform hover:scale-105 ${
+                                selectedAnswer === option
+                                  ? "border-red-500 bg-red-500/20 scale-105"
+                                  : isAdvancing 
+                                  ? "border-gray-600 cursor-not-allowed opacity-50"
+                                  : "border-gray-600 hover:border-red-400 cursor-pointer"
+                              }`}
+                            >
+                              <div className="text-center">
+                                <div className="relative mb-4">
+                                  <img
+                                    src={imageUrl}
+                                    alt={option}
+                                    className="w-32 h-32 md:w-40 md:h-40 object-cover rounded-full mx-auto border-4 border-white/20"
+                                  />
+                                  
+                                  {/* Checkmark quando selecionado */}
+                                  {selectedAnswer === option && (
+                                    <motion.div
+                                      initial={{ scale: 0 }}
+                                      animate={{ scale: 1 }}
+                                      className="absolute -top-2 -right-2 w-8 h-8 bg-red-500 rounded-full flex items-center justify-center border-2 border-white"
+                                    >
+                                      <Check className="w-4 h-4 text-white" />
+                                    </motion.div>
+                                  )}
+                                </div>
+                                
+                                <h3 className="text-xl font-bold text-white mb-2">{option}</h3>
                               </div>
-
-                              <div
-                                className={`w-5 h-5 rounded-full border-2 mr-4 flex items-center justify-center transition-all ${
-                                  selectedAnswer === option ? "border-white bg-white" : "border-gray-400 bg-gray-700"
-                                }`}
-                              >
-                                {selectedAnswer === option && <Check className="w-3 h-3 text-red-600" />}
-                              </div>
-                              <span className="flex-1 font-medium">{option}</span>
-                            </div>
-                          </button>
-
-                          {/* Efecto de pulso para botones */}
-                          {!selectedAnswer && !isAdvancing && (
-                            <motion.div
-                              className="absolute inset-0 rounded-lg border-2 border-red-400/50 pointer-events-none"
-                              animate={{
-                                opacity: [0, 0.3, 0],
-                                scale: [1, 1.02, 1],
-                              }}
-                              transition={{
-                                duration: 2,
-                                repeat: Number.POSITIVE_INFINITY,
-                                delay: index * 0.5,
-                              }}
-                            />
-                          )}
-                        </motion.div>
-                      ))}
+                            </button>
+                            
+                            {/* Efeito de brilho */}
+                            {!selectedAnswer && !isAdvancing && (
+                              <motion.div
+                                className="absolute inset-0 rounded-2xl border-3 border-red-400/50 pointer-events-none"
+                                animate={{
+                                  opacity: [0, 0.4, 0],
+                                  scale: [1, 1.02, 1],
+                                }}
+                                transition={{
+                                  duration: 2,
+                                  repeat: Number.POSITIVE_INFINITY,
+                                  delay: index * 0.8,
+                                }}
+                              />
+                            )}
+                          </motion.div>
+                        );
+                      })}
                     </div>
+                  ) : (
+                    /* ✅ RENDERIZAÇÃO NORMAL PARA OUTRAS ETAPAS */
+                    currentStep.options && currentStep.options.length > 0 && (
+                      <div className="space-y-4">
+                        {currentStep.options.map((option, index) => (
+                          <motion.div
+                            key={index}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: index * 0.1, duration: 0.4 }}
+                            className="relative"
+                          >
+                            <button
+                              onClick={() => handleAnswerSelect(option)}
+                              data-option={option}
+                              disabled={isAdvancing}
+                              className={`w-full p-6 text-left justify-start text-wrap h-auto rounded-lg border-2 transition-all duration-300 transform hover:scale-102 ${
+                                selectedAnswer === option
+                                  ? "bg-gradient-to-r from-red-500 to-red-600 text-white border-red-500 shadow-lg scale-105"
+                                  : isAdvancing 
+                                  ? "bg-gray-800 text-gray-400 border-gray-600 cursor-not-allowed"
+                                  : "bg-gray-800 text-white border-gray-600 hover:bg-gray-700 hover:border-gray-500 shadow-sm cursor-pointer"
+                              }`}
+                            >
+                              <div className="flex items-center w-full">
+                                <div className={`mr-4 ${selectedAnswer === option ? "text-white" : "text-red-400"}`}>
+                                  <Heart className="w-6 h-6" />
+                                </div>
+
+                                <div
+                                  className={`w-5 h-5 rounded-full border-2 mr-4 flex items-center justify-center transition-all ${
+                                    selectedAnswer === option ? "border-white bg-white" : "border-gray-400 bg-gray-700"
+                                  }`}
+                                >
+                                  {selectedAnswer === option && <Check className="w-3 h-3 text-red-600" />}
+                                </div>
+                                <span className="flex-1 font-medium">{option}</span>
+                              </div>
+                            </button>
+
+                            {/* Efecto de pulso para botones */}
+                            {!selectedAnswer && !isAdvancing && (
+                              <motion.div
+                                className="absolute inset-0 rounded-lg border-2 border-red-400/50 pointer-events-none"
+                                animate={{
+                                  opacity: [0, 0.3, 0],
+                                  scale: [1, 1.02, 1],
+                                }}
+                                transition={{
+                                  duration: 2,
+                                  repeat: Number.POSITIVE_INFINITY,
+                                  delay: index * 0.5,
+                                }}
+                              />
+                            )}
+                          </motion.div>
+                        ))}
+                      </div>
+                    )
                   )}
 
                   {/* ✅ INDICADOR DE AVANCE AUTOMÁTICO */}
