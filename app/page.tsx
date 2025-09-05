@@ -31,6 +31,13 @@ export default function HomePage() {
   const [loadingProgress, setLoadingProgress] = useState(0)
   const [errorMessage, setErrorMessage] = useState("")
   const [isOnline, setIsOnline] = useState(true)
+  const [selectedGender, setSelectedGender] = useState(null)
+
+  // URLs das imagens - FÁCIL DE EDITAR
+  const imageUrls = {
+    woman: "https://comprarplanseguro.shop/wp-content/uploads/2025/08/mujer-sonriendo.webp", // Substitua pela URL da imagem da mulher
+    man: "https://comprarplanseguro.shop/wp-content/uploads/2025/08/hombre-sonriendo.webp"   // Substitua pela URL da imagem do homem
+  }
 
   // Detecção de conexão minimalista
   useEffect(() => {
@@ -60,14 +67,15 @@ export default function HomePage() {
     return () => clearTimeout(timer)
   }, [])
 
-  // Função de início ultra-otimizada
-  const handleStart = useCallback(() => {
+  // Função para selecionar gênero
+  const handleGenderSelect = useCallback((gender) => {
     if (isLoading || !isOnline) return
 
+    setSelectedGender(gender)
     setIsLoading(true)
     setLoadingProgress(20)
 
-    enviarEvento("quiz_start")
+    enviarEvento("gender_selected", { gender })
 
     let progress = 20
     const interval = setInterval(() => {
@@ -77,15 +85,18 @@ export default function HomePage() {
       if (progress >= 100) {
         clearInterval(interval)
 
-        // Preservar UTMs
+        // Preservar UTMs e adicionar gênero
         let url = "/quiz/1"
-        if (typeof window !== "undefined" && window.location.search) {
+        if (typeof window !== "undefined") {
           const params = new URLSearchParams(window.location.search)
           const utms = new URLSearchParams()
 
           for (const [key, value] of params) {
             if (key.startsWith("utm_")) utms.set(key, value)
           }
+
+          // Adicionar gênero selecionado
+          utms.set("gender", gender)
 
           if (utms.toString()) url += `?${utms.toString()}`
         }
@@ -110,16 +121,21 @@ export default function HomePage() {
         }}
       >
         <style jsx>{`
-.btn-quiz-pulsante{background:linear-gradient(135deg,#dc2626 0%,#b91c1c 100%)!important;color:white!important;border:none!important;padding:18px 36px!important;font-size:19px!important;font-weight:bold!important;border-radius:50px!important;text-transform:uppercase!important;cursor:pointer!important;transition:all .3s ease!important;animation:pulsar 2s infinite!important;width:100%!important;max-width:320px!important;box-shadow:0 8px 25px rgba(220,38,38,.4)!important;letter-spacing:.5px!important}
-@keyframes pulsar{0%{transform:scale3d(1, 1, 1);box-shadow:0 8px 25px rgba(220,38,38,.4),0 0 0 0 rgba(220,38,38,.7)}70%{transform:scale3d(1.03, 1.03, 1);box-shadow:0 12px 35px rgba(220,38,38,.6),0 0 0 15px rgba(220,38,38,0)}100%{transform:scale3d(1, 1, 1);box-shadow:0 8px 25px rgba(220,38,38,.4),0 0 0 0 rgba(220,38,38,0)}}
-.btn-quiz-pulsante:hover{background:linear-gradient(135deg,#b91c1c 0%,#991b1b 100%)!important;transform:scale(1.05)!important;box-shadow:0 15px 40px rgba(220,38,38,.7)!important}
-.container-preto{background:linear-gradient(145deg,#000 0%,#111 100%)!important;border:2px solid #333!important;border-radius:25px!important;padding:45px!important;max-width:650px!important;margin:0 auto!important;text-align:center!important;box-shadow:0 20px 60px rgba(0,0,0,.8)!important;backdrop-filter:blur(10px)!important;min-height: 400px;contain: layout style;}
-.titulo-principal{color:#fff!important;font-size:34px!important;font-weight:800!important;margin-bottom:25px!important;line-height:1.3!important;text-shadow:2px 2px 4px rgba(0,0,0,.5)!important;animation:fadeInUp 1.2s ease-out .3s both!important}
-.subtitulo{color:#e5e5e5!important;font-size:19px!important;margin-bottom:35px!important;font-weight:500!important;line-height:1.4!important;animation:fadeInUp 1.2s ease-out .6s both!important}
-.texto-garantia{color:#a3a3a3!important;font-size:14px!important;margin-top:20px!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;font-weight:500!important}
-.indicador-progresso{display:flex!important;align-items:center!important;justify-content:center!important;gap:12px!important;margin-bottom:30px!important;color:#dc2626!important;font-size:14px!important;font-weight:600!important;animation:fadeInUp 1.2s ease-out .9s both!important}
-.circulo-progresso{width:12px!important;height:12px!important;border-radius:50%!important;background:#dc2626!important;box-shadow:0 0 10px rgba(220,38,38,.5)!important}
-.circulo-inativo{background:#333!important;box-shadow:none!important}
+.btn-gender{background:linear-gradient(135deg,#dc2626 0%,#b91c1c 100%)!important;color:white!important;border:none!important;padding:16px 32px!important;font-size:18px!important;font-weight:bold!important;border-radius:50px!important;text-transform:uppercase!important;cursor:pointer!important;transition:all .3s ease!important;width:100%!important;max-width:200px!important;box-shadow:0 8px 25px rgba(220,38,38,.4)!important;letter-spacing:.5px!important;margin-top:15px!important}
+.btn-gender:hover{background:linear-gradient(135deg,#b91c1c 0%,#991b1b 100%)!important;transform:scale(1.05)!important;box-shadow:0 15px 40px rgba(220,38,38,.7)!important}
+.btn-gender:active{transform:scale(0.98)!important}
+.gender-container{display:flex!important;justify-content:center!important;align-items:center!important;gap:40px!important;margin:30px 0!important;flex-wrap:wrap!important}
+.gender-option{display:flex!important;flex-direction:column!important;align-items:center!important;text-align:center!important;transition:all .3s ease!important}
+.gender-option:hover{transform:translateY(-5px)!important}
+.gender-image{width:180px!important;height:240px!important;border-radius:20px!important;border:4px solid #dc2626!important;box-shadow:0 10px 30px rgba(220,38,38,.3)!important;object-fit:cover!important;transition:all .3s ease!important;cursor:pointer!important}
+.gender-image:hover{border-color:#f87171!important;box-shadow:0 15px 40px rgba(220,38,38,.5)!important;transform:scale(1.02)!important}
+.container-preto{background:linear-gradient(145deg,#000 0%,#111 100%)!important;border:2px solid #333!important;border-radius:25px!important;padding:45px!important;max-width:700px!important;margin:0 auto!important;text-align:center!important;box-shadow:0 20px 60px rgba(0,0,0,.8)!important;backdrop-filter:blur(10px)!important;min-height: 500px;contain: layout style;}
+.titulo-principal{color:#fff!important;font-size:36px!important;font-weight:800!important;margin-bottom:25px!important;line-height:1.3!important;text-shadow:2px 2px 4px rgba(0,0,0,.5)!important;animation:fadeInUp 1.2s ease-out .3s both!important}
+.pregunta{color:#e5e5e5!important;font-size:22px!important;margin-bottom:35px!important;font-weight:600!important;line-height:1.4!important;animation:fadeInUp 1.2s ease-out .6s both!important}
+.texto-garantia{color:#a3a3a3!important;font-size:14px!important;margin-top:25px!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;font-weight:500!important}
+.progress-bar-container{width:100%!important;max-width:400px!important;margin:0 auto 30px auto!important;background:#333!important;height:8px!important;border-radius:10px!important;overflow:hidden!important;animation:fadeInUp 1.2s ease-out .9s both!important}
+.progress-bar-fill{height:100%!important;background:linear-gradient(90deg,#dc2626,#f87171)!important;width:25%!important;border-radius:10px!important;transition:width .3s ease!important}
+.progress-text{color:#dc2626!important;font-size:14px!important;font-weight:600!important;margin-bottom:10px!important;text-align:center!important}
 .depoimento{background: linear-gradient(145deg, #111 0%, #000 100%);
   border: 1px solid #444;
   border-radius: 18px;
@@ -168,8 +184,8 @@ export default function HomePage() {
   padding-top: 100px;
   contain: layout style paint;}
 .copyright{position:relative;margin-top:40px;padding:20px;color:#888;font-size:12px;text-align:center}
-@media (max-width:768px){.container-preto{padding:25px!important;margin:10px!important;border-radius:20px!important}.logo-container{margin-bottom:30px!important}.logo-arredondada{width:160px!important;height:100px!important;border:3px solid #dc2626!important}.titulo-principal{font-size:26px!important;margin-bottom:18px!important;line-height:1.2!important}.subtitulo{font-size:16px!important;margin-bottom:25px!important}.depoimento{padding:15px;margin:20px auto;max-width:95%}.btn-quiz-pulsante{padding:16px 32px!important;font-size:16px!important;max-width:95%!important}.main-content{padding-top:20px;min-height:calc(100vh - 40px)}.copyright{margin-top:30px;padding:15px}}
-@media (max-width:480px){.container-preto{padding:20px!important;margin:5px!important}.logo-arredondada{width:140px!important;height:85px!important;border:2px solid #dc2626!important}.titulo-principal{font-size:22px!important;line-height:1.1!important}.subtitulo{font-size:14px!important}.depoimento{padding:12px;gap:10px;margin:15px auto}.avatar{width:35px;height:35px}.btn-quiz-pulsante{padding:14px 28px!important;font-size:14px!important}.copyright{margin-top:25px;padding:10px;font-size:11px}}
+@media (max-width:768px){.container-preto{padding:25px!important;margin:10px!important;border-radius:20px!important}.logo-container{margin-bottom:30px!important}.logo-arredondada{width:160px!important;height:100px!important;border:3px solid #dc2626!important}.titulo-principal{font-size:28px!important;margin-bottom:18px!important;line-height:1.2!important}.pregunta{font-size:18px!important;margin-bottom:25px!important}.gender-container{gap:25px!important;margin:25px 0!important}.gender-image{width:140px!important;height:180px!important;border:3px solid #dc2626!important}.btn-gender{padding:14px 28px!important;font-size:16px!important;max-width:140px!important}.depoimento{padding:15px;margin:20px auto;max-width:95%}.main-content{padding-top:20px;min-height:calc(100vh - 40px)}.copyright{margin-top:30px;padding:15px}}
+@media (max-width:480px){.container-preto{padding:20px!important;margin:5px!important}.logo-arredondada{width:140px!important;height:85px!important;border:2px solid #dc2626!important}.titulo-principal{font-size:24px!important;line-height:1.1!important}.pregunta{font-size:16px!important}.gender-container{flex-direction:column!important;gap:20px!important;align-items:center!important}.gender-image{width:120px!important;height:160px!important;border:2px solid #dc2626!important}.btn-gender{padding:12px 24px!important;font-size:14px!important;max-width:120px!important}.depoimento{padding:12px;gap:10px;margin:15px auto}.avatar{width:35px;height:35px}.copyright{margin-top:25px;padding:10px;font-size:11px}}
 @keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
 `}</style>
 
@@ -241,7 +257,7 @@ export default function HomePage() {
         {/* CONTEÚDO PRINCIPAL */}
         <div className="main-content">
           <div className="container-preto">
-            {/* LOGO CENTRALIZADA - IMAGEM WEBP OTIMIZADA */}
+            {/* LOGO CENTRALIZADA */}
             <div className="logo-container">
               <Image
                 src="https://comprarplanseguro.shop/wp-content/uploads/2025/08/543af5ae-e239-4f03-a3a8-59c53717f3b9.webp"
@@ -261,49 +277,72 @@ export default function HomePage() {
               />
             </div>
 
-            {/* TÍTULO PRINCIPAL OTIMIZADO */}
+            {/* TÍTULO PRINCIPAL */}
             <h1 className="titulo-principal">
-              Haz que tu amor regrese a ti 100% en piloto automático, incluso en las situaciones más complicadas.
+              HAZ QUE CUALQUIER PERSONA CAIGA A TUS PIES, EN MENOS DE 7 DÍAS
             </h1>
 
-            {/* SUBTÍTULO OTIMIZADO */}
-            <p className="subtitulo">
-              Sin juegos mentales. Solo el poder del método probado por más de 3.847 personas.
-            </p>
-
-            {/* INDICADOR DE PROGRESSO */}
-            <div className="indicador-progresso">
-              <div className="circulo-progresso"></div>
-              <div className="circulo-progresso circulo-inativo"></div>
-              <div className="circulo-progresso circulo-inativo"></div>
-              <div className="circulo-progresso circulo-inativo"></div>
-              <span>Paso 1</span>
+            {/* BARRA DE PROGRESSO */}
+            <div className="progress-text">Paso 1 de 4</div>
+            <div className="progress-bar-container">
+              <div className="progress-bar-fill"></div>
             </div>
 
-            {/* BOTÃO CTA OTIMIZADO */}
-            <button onClick={handleStart} disabled={isLoading || !isOnline} className="btn-quiz-pulsante">
-              {isLoading ? (
-                <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  PREPARANDO...
-                  <div
-                    style={{
-                      marginLeft: "10px",
-                      width: "18px",
-                      height: "18px",
-                      border: "2px solid rgba(255,255,255,0.3)",
-                      borderTop: "2px solid white",
-                      borderRadius: "50%",
-                      animation: "spin 1s linear infinite",
-                    }}
-                  />
-                </span>
-              ) : (
-                <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  COMENZAR QUIZ AHORA
-                  <ArrowRight style={{ marginLeft: "12px", width: "22px", height: "22px" }} />
-                </span>
-              )}
-            </button>
+            {/* PERGUNTA */}
+            <h2 className="pregunta">¿CUÁL ES TU SEXO?</h2>
+
+            {/* SELEÇÃO DE GÊNERO */}
+            <div className="gender-container">
+              {/* OPÇÃO MULHER */}
+              <div className="gender-option">
+                <Image
+                  src={imageUrls.woman}
+                  alt="Mujer sonriendo, cabello corto, camisa roja"
+                  width={180}
+                  height={240}
+                  className="gender-image"
+                  quality={80}
+                  sizes="(max-width: 480px) 120px, (max-width: 768px) 140px, 180px"
+                  loading="eager"
+                  onClick={() => handleGenderSelect('mujer')}
+                  onError={(e) => {
+                    e.target.src = "https://via.placeholder.com/180x240/dc2626/ffffff?text=MUJER"
+                  }}
+                />
+                <button 
+                  onClick={() => handleGenderSelect('mujer')} 
+                  disabled={isLoading || !isOnline} 
+                  className="btn-gender"
+                >
+                  MUJER
+                </button>
+              </div>
+
+              {/* OPÇÃO HOMEM */}
+              <div className="gender-option">
+                <Image
+                  src={imageUrls.man}
+                  alt="Hombre sonriendo, barba, camisa roja"
+                  width={180}
+                  height={240}
+                  className="gender-image"
+                  quality={80}
+                  sizes="(max-width: 480px) 120px, (max-width: 768px) 140px, 180px"
+                  loading="eager"
+                  onClick={() => handleGenderSelect('hombre')}
+                  onError={(e) => {
+                    e.target.src = "https://via.placeholder.com/180x240/dc2626/ffffff?text=HOMBRE"
+                  }}
+                />
+                <button 
+                  onClick={() => handleGenderSelect('hombre')} 
+                  disabled={isLoading || !isOnline} 
+                  className="btn-gender"
+                >
+                  HOMBRE
+                </button>
+              </div>
+            </div>
 
             {/* TEXTO DE GARANTIA */}
             <div className="texto-garantia">
@@ -313,7 +352,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* DEPOIMENTO MELHORADO - AVATAR WEBP OTIMIZADO */}
+        {/* DEPOIMENTO */}
         <div className="depoimento">
           <div className="avatar">
             <Image
