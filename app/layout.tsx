@@ -20,7 +20,7 @@ export default function RootLayout({
     <html lang="pt-BR">
       <head>
         {/* Google tag (gtag.js) */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-DENFF29MR0"></script>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-6RSFFRLTS5"></script>
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -28,7 +28,7 @@ export default function RootLayout({
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
 
-              gtag('config', 'G-DENFF29MR0');
+              gtag('config', 'G-6RSFFRLTS5');
             `,
           }}
         />
