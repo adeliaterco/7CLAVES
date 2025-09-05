@@ -35,8 +35,8 @@ export default function QuizStep() {
   const [userGender, setUserGender] = useState<string>("")
 
   const currentStep = quizSteps[step - 1]
-  // ✅ ATUALIZADO: Agora são 18 etapas no total
-  const progress = currentStep?.elements?.progressValue || (step / 18) * 100
+  // ✅ ATUALIZADO: Agora são 17 etapas no total
+  const progress = currentStep?.elements?.progressValue || (step / 17) * 100
 
   useEffect(() => {
     // Cargar datos guardados
@@ -57,7 +57,7 @@ export default function QuizStep() {
       pergunta: currentStep?.question || `Etapa ${step}`
     });
 
-    // Avance automático para el paso de carga (etapa 18)
+    // Avance automático para el paso de carga (etapa 17)
     if (currentStep?.autoAdvance) {
       const timer = setTimeout(() => {
         proceedToNextStep()
@@ -125,13 +125,13 @@ export default function QuizStep() {
       utmString = '?' + utmParams.toString();
     }
 
-    // ✅ ATUALIZADO: Navegação agora usa 18 como limite
-    if (step < 18) {
+    // ✅ ATUALIZADO: Navegação agora usa 17 como limite
+    if (step < 17) {
       router.push(`/quiz/${step + 1}${utmString}`)
     } else {
-      // ✅ ATUALIZADO: Evento de conclusão agora registra 18 etapas
+      // ✅ ATUALIZADO: Evento de conclusão agora registra 17 etapas
       enviarEvento('concluiu_quiz', {
-        total_etapas_completadas: 18,
+        total_etapas_completadas: 17,
       });
       
       router.push(`/resultado${utmString}`)
@@ -210,9 +210,9 @@ export default function QuizStep() {
           </div>
 
           <div className="flex justify-between items-center">
-            {/* ✅ ATUALIZADO: Texto do progresso agora mostra 18 etapas */}
+            {/* ✅ ATUALIZADO: Texto do progresso agora mostra 17 etapas */}
             <p className="text-white text-sm">
-              Etapa {step} de 18 • {Math.round(progress)}% completado
+              Etapa {step} de 17 • {Math.round(progress)}% completado
             </p>
           </div>
         </div>
@@ -247,7 +247,7 @@ export default function QuizStep() {
           <Card className="bg-gradient-to-br from-gray-900/95 to-black/95 backdrop-blur-lg border-red-500/30 shadow-2xl border-2">
             <CardContent className="p-8">
               
-              {/* ✅ ETAPA 18 - LOADING ESPECIAL */}
+              {/* ✅ ETAPA 17 - LOADING ESPECIAL */}
               {currentStep?.autoAdvance && currentStep?.elements?.loading && (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
@@ -334,6 +334,22 @@ export default function QuizStep() {
                               <span className="flex-1 font-medium">{option}</span>
                             </div>
                           </button>
+
+                          {/* Efecto de pulso para botones */}
+                          {!selectedAnswer && (
+                            <motion.div
+                              className="absolute inset-0 rounded-lg border-2 border-red-400/50 pointer-events-none"
+                              animate={{
+                                opacity: [0, 0.3, 0],
+                                scale: [1, 1.02, 1],
+                              }}
+                              transition={{
+                                duration: 2,
+                                repeat: Number.POSITIVE_INFINITY,
+                                delay: index * 0.5,
+                              }}
+                            />
+                          )}
                         </motion.div>
                       ))}
                     </div>
@@ -357,13 +373,13 @@ export default function QuizStep() {
                       animate={{ opacity: 1, y: 0 }}
                       className="mt-8 text-center"
                     >
-                      {/* ✅ ATUALIZADO: Botão agora usa 18 como referência para resultado */}
+                      {/* ✅ ATUALIZADO: Botão agora usa 17 como referência para resultado */}
                       <Button
                         onClick={handleNext}
                         size="lg"
                         className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-bold py-4 px-6 rounded-full shadow-lg max-w-full"
                       >
-                        {step === 17 ? "Liberar Acceso" : "Siguiente Pregunta"}
+                        {step === 16 ? "Liberar Acceso" : "Siguiente Pregunta"}
                         <ArrowRight className="w-5 h-5 ml-2" />
                       </Button>
                     </motion.div>
@@ -373,6 +389,20 @@ export default function QuizStep() {
             </CardContent>
           </Card>
         </motion.div>
+
+        {/* Prueba Social Simplificada */}
+        {step > 2 && !currentStep?.autoAdvance && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1 }}
+            className="text-center mt-6"
+          >
+            <p className="text-red-300 text-sm bg-red-900/20 px-3 py-1 rounded-full inline-block">
+              🔮 Tu energía espiritual está siendo analizada...
+            </p>
+          </motion.div>
+        )}
       </div>
     </div>
   )
